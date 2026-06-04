@@ -1,119 +1,52 @@
 /**
- * ╔══════════════════════════════════════════════════╗
- *  Cookies Grandma — Main Server
- *  Node.js + Express + SQLite
- * ╚══════════════════════════════════════════════════╝
+ * Cookies Grandma — Express App
+ * Exported for Vercel serverless (api/index.js)
+ * Also runs standalone: node server.js
  */
-
 require('dotenv').config();
 
-const express    = require('express');
-const cors       = require('cors');
-const path       = require('path');
-const rateLimit  = require('express-rate-limit');
+const express   = require('express');
+const cors      = require('cors');
+const rateLimit = require('express-rate-limit');
 
-const authRoutes     = require('./routes/auth');
-const orderRoutes    = require('./routes/orders');
-const productRoutes  = require('./routes/products');
+const app = express();
 
-const app  = express();
-const PORT = process.env.PORT || 3000;
-
-// ─── MIDDLEWARE ───────────────────────────────────────────────────────────────
-
+// ─── CORS ─────────────────────────────────────────────────────────────────────
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.BASE_URL
-    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: (origin, cb) => cb(null, true), // Vercel handles origin security
   credentials: true,
 }));
 
+// ─── MIDDLEWARE ───────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1);
 
-// Rate limiting — protect API from abuse
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many requests. Please try again later.' }
+// Rate limiting
+app.use('/api/', rateLimit({ windowMs:15*60*1000, max:200, standardHeaders:true, legacyHeaders:false }));
+app.use('/api/orders', rateLimit({ windowMs:10*60*1000, max:20 }));
+
+// ─── ROUTES ───────────────────────────────────────────────────────────────────
+app.use('/api/auth',     require('./routes/auth'));
+app.use('/api/orders',   require('./routes/orders'));
+app.use('/api/products', require('./routes/products'));
+
+// ─── HEALTH ───────────────────────────────────────────────────────────────────
+app.get('/api/health', async (req, res) => {
+  let db = 'ok';
+  try { await require('./lib/pool').query('SELECT 1'); } catch { db = 'error'; }
+  res.json({ success:true, status:'running', name:'Cookies Grandma API', db, ts: new Date().toISOString() });
 });
 
-const orderLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 10,
-  message: { success: false, message: 'Too many order attempts. Please wait a moment.' }
-});
+app.get('/', (req, res) => res.json({ message:'🍪 Cookies Grandma API' }));
 
-app.use('/api/', apiLimiter);
-app.use('/api/orders', orderLimiter);
+app.use((req, res) => res.status(404).json({ success:false, message:'Not found.' }));
+app.use((err, req, res, next) => { console.error(err); res.status(500).json({ success:false, message:'Server error.' }); });
 
-// ─── STATIC FILES ─────────────────────────────────────────────────────────────
-
-// Serve the main site & admin panel
-app.use(express.static(path.join(__dirname), {
-  index: false, // We control routing below
-}));
-
-// ─── API ROUTES ───────────────────────────────────────────────────────────────
-
-app.use('/api/auth',     authRoutes);
-app.use('/api/orders',   orderRoutes);
-app.use('/api/products', productRoutes);
-
-// ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
-
-app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    status: 'running',
-    name: 'Cookies Grandma API',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-  });
-});
-
-// ─── PAGE ROUTES ──────────────────────────────────────────────────────────────
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
-});
-
-app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
-});
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// 404 fallback
-app.use((req, res) => {
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ success: false, message: 'API endpoint not found.' });
-  }
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Server error:', err.stack);
-  res.status(500).json({ success: false, message: 'Internal server error.' });
-});
-
-// ─── START ────────────────────────────────────────────────────────────────────
-
-app.listen(PORT, () => {
-  console.log('\n╔══════════════════════════════════════════════╗');
-  console.log('║   🍪  Cookies Grandma Server Running         ║');
-  console.log('╠══════════════════════════════════════════════╣');
-  console.log(`║   🌐  Website:  http://localhost:${PORT}         ║`);
-  console.log(`║   🔧  Admin:    http://localhost:${PORT}/admin    ║`);
-  console.log(`║   📡  API:      http://localhost:${PORT}/api      ║`);
-  console.log('╠══════════════════════════════════════════════╣');
-  console.log(`║   ENV: ${(process.env.NODE_ENV || 'development').padEnd(37)}║`);
-  console.log('╚══════════════════════════════════════════════╝\n');
-});
+// ─── LOCAL DEV (not used by Vercel) ──────────────────────────────────────────
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`\n🍪 Running locally → http://localhost:${PORT}/api/health\n`));
+}
 
 module.exports = app;
