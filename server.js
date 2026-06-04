@@ -33,9 +33,20 @@ app.use('/api/products', require('./routes/products'));
 
 // ─── HEALTH ───────────────────────────────────────────────────────────────────
 app.get('/api/health', async (req, res) => {
-  let db = 'ok';
-  try { await require('./lib/pool').query('SELECT 1'); } catch { db = 'error'; }
-  res.json({ success:true, status:'running', name:'Cookies Grandma API', db, ts: new Date().toISOString() });
+  let db = 'ok', dbError = null;
+  try {
+    await require('./lib/pool').query('SELECT 1');
+  } catch(e) {
+    db = 'error';
+    dbError = e.message; // Show real error for debugging
+  }
+  res.json({
+    success: true, status: 'running',
+    name: 'Cookies Grandma API', db,
+    ...(dbError && { dbError }),
+    hasDbUrl: !!process.env.DATABASE_URL,
+    ts: new Date().toISOString()
+  });
 });
 
 app.get('/', (req, res) => res.json({ message:'🍪 Cookies Grandma API' }));
