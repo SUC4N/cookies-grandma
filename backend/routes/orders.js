@@ -28,8 +28,8 @@ async function calcTotal(nastar, kastangel, giftWrap) {
     getSetting('price_hamper_box'),
     getSetting('shipping_cost_default'),
   ]);
-  const priceNastar    = parseInt(process.env.PRICE_NASTAR    || 95000);
-  const priceKastangel = parseInt(process.env.PRICE_KASTANGEL || 95000);
+  const priceNastar    = parseInt(process.env.PRICE_NASTAR    || 80000);
+  const priceKastangel = parseInt(process.env.PRICE_KASTANGEL || 115000);
   const giftCost =
     giftWrap === 'gift_wrap' ? parseInt(giftWrapPrice  || 15000) :
     giftWrap === 'hamper'    ? parseInt(hamperPrice    || 35000) : 0;

@@ -99,20 +99,30 @@ body::before {
   box-shadow: 0 1px 0 var(--cream-dk);
 }
 .nav-logo {
-  display: flex; align-items: center; gap: 0.75rem;
+  display: flex; align-items: center; gap: 0;
 }
-.nav-logo-icon {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--crimson);
+.nav-logo-mark-wrap,
+.nav-logo-text-wrap {
+  position: relative; overflow: hidden; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  color: var(--cream); font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
-  flex-shrink: 0;
 }
-.nav-logo-text {
-  font-family: var(--font-display); font-size: 1.2rem; font-weight: 700;
-  color: var(--crimson); letter-spacing: -0.01em; line-height: 1.1;
+.nav-logo-mark-wrap {
+  width: 50px; height: 54px;
 }
-.nav-logo-text span { display: block; font-size: 0.65rem; font-weight: 400; font-family: var(--font-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dk); }
+.nav-logo-text-wrap {
+  width: 158px; height: 68px;
+}
+.nav-logo-mark {
+  width: 92px; height: 92px; max-width: none; object-fit: contain;
+  transform: translateX(1px);
+}
+.nav-logo-wordmark {
+  width: 320px; height: 320px; max-width: none; object-fit: contain;
+  transform: translate(-17px, -1px);
+}
+.nav-logo img {
+  transition: opacity 0.2s ease;
+}
 .nav-links { display: flex; gap: 2.5rem; align-items: center; }
 .nav-links a { font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); transition: color 0.2s; }
 .nav-links a:hover { color: var(--crimson); }
@@ -227,6 +237,9 @@ body::before {
   display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
   gap: 3px;
 }
+.hero-img-grid.single-photo {
+  display: block;
+}
 .hero-img-grid img {
   width: 100%; height: 100%; object-fit: cover;
   transition: transform 8s linear;
@@ -287,6 +300,11 @@ body::before {
 }
 .story-imgs {
   position: relative; height: 560px;
+}
+.story-video {
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+  border-radius: 6px; box-shadow: var(--shadow-warm); display: block;
+  background: var(--cream);
 }
 .story-img-main {
   position: absolute; top: 0; left: 0; width: 70%; height: 80%;
@@ -359,12 +377,19 @@ body::before {
 .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(61,31,13,0.12); }
 .product-card-media {
   position: relative; overflow: hidden; height: 420px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream-lt);
 }
-.product-card-media img {
-  width: 100%; height: 100%; object-fit: cover;
+.product-card-media > img {
+  width: 100%; height: 100%; object-fit: contain; object-position: center;
+  display: block;
   transition: transform 0.7s var(--ease-out-expo);
 }
-.product-card:hover .product-card-media img { transform: scale(1.05); }
+#nastarMainImg {
+  object-fit: cover;
+  object-position: center;
+}
+.product-card:hover .product-card-media > img { transform: scale(1.02); }
 .product-card-badge {
   position: absolute; top: 1.25rem; left: 1.25rem;
   background: var(--crimson); color: var(--cream);
@@ -374,7 +399,7 @@ body::before {
 }
 .product-thumb-strip {
   position: absolute; bottom: 0; left: 0; right: 0;
-  display: flex; gap: 4px; padding: 4px;
+  display: none; gap: 4px; padding: 4px;
   background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
 }
 .product-thumb {
@@ -438,26 +463,32 @@ body::before {
 .gallery-header .section-label { justify-content: center; color: var(--gold-lt); }
 .gallery-header .section-label::before { background: var(--gold-lt); }
 .gallery-header .section-title { color: var(--cream); }
-.gallery-track-wrap { overflow: hidden; }
+.gallery-track-wrap {
+  overflow-x: auto; overflow-y: hidden;
+  scroll-behavior: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.gallery-track-wrap::-webkit-scrollbar { display: none; }
 .gallery-track {
-  display: flex; gap: 1rem;
-  animation: galleryScroll 30s linear infinite;
-  width: max-content;
+  display: flex; gap: 1rem; width: max-content;
+  padding: 0 4rem;
 }
-.gallery-track:hover { animation-play-state: paused; }
 .gallery-item {
-  width: 260px; height: 320px; border-radius: 6px; overflow: hidden; flex-shrink: 0;
-  position: relative;
+  width: clamp(220px, 22vw, 320px); height: clamp(280px, 32vw, 420px);
+  border-radius: 6px; overflow: hidden; flex: 0 0 auto;
+  position: relative; background: rgba(245,237,214,0.08);
 }
+.gallery-item.wide,
+.gallery-item.tall { width: clamp(220px, 22vw, 320px); height: clamp(280px, 32vw, 420px); }
 .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 .gallery-item:hover img { transform: scale(1.08); }
 .gallery-item-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(92,15,15,0.6), transparent 50%);
   opacity: 0; transition: opacity 0.3s;
-  display: flex; align-items: flex-end; padding: 1rem;
+  display: none; align-items: flex-end; padding: 1rem;
 }
-.gallery-item:hover .gallery-item-overlay { opacity: 1; }
+.gallery-item:hover .gallery-item-overlay { opacity: 0; }
 .gallery-item-overlay span {
   font-family: var(--font-display); font-size: 0.9rem; font-style: italic;
   color: var(--cream);
@@ -493,7 +524,9 @@ body::before {
 .why-feature-icon {
   width: 48px; height: 48px; border-radius: 10px; background: var(--crimson);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; flex-shrink: 0;
+  font-family: var(--font-ui); font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.08em; color: var(--cream); text-transform: uppercase;
+  flex-shrink: 0; text-align: center; line-height: 1.05;
 }
 .why-feature-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--brown); }
 .why-feature-desc { font-size: 0.92rem; line-height: 1.6; color: var(--text-soft); margin-top: 0.2rem; font-weight: 300; }
@@ -772,10 +805,6 @@ body::before {
 @keyframes ticker {
   from { transform: translateX(0); } to { transform: translateX(-50%); }
 }
-@keyframes galleryScroll {
-  from { transform: translateX(0); } to { transform: translateX(-50%); }
-}
-
 /* Scroll reveal */
 .reveal {
   opacity: 0; transform: translateY(32px);
@@ -812,6 +841,15 @@ body::before {
   .container { padding: 0 1.5rem; }
   .section { padding: 4.5rem 0; }
   .products-grid { grid-template-columns: 1fr; }
+  .gallery-track { padding: 0 1.5rem; }
+  .gallery-item,
+  .gallery-item.wide,
+  .gallery-item.tall { width: 260px; height: 340px; }
+  .nav-logo { gap: 0; }
+  .nav-logo-mark-wrap { width: 42px; height: 46px; }
+  .nav-logo-mark { width: 78px; height: 78px; }
+  .nav-logo-text-wrap { width: 126px; height: 56px; }
+  .nav-logo-wordmark { width: 248px; height: 248px; transform: translate(-16px, -1px); }
 }
 </style>
 </head>
@@ -853,10 +891,11 @@ body::before {
 <!-- ═══════════════════════════════ NAVBAR -->
 <nav class="nav" id="navbar">
   <div class="nav-logo">
-    <div class="nav-logo-icon">CG</div>
-    <div class="nav-logo-text">
-      Cookies Grandma
-      <span>Premium Artisan Cookies</span>
+    <div class="nav-logo-mark-wrap">
+      <img class="nav-logo-mark" id="navLogoMark" src="Resources_4/Logo_Light.png" alt="Cookies Grandma logo">
+    </div>
+    <div class="nav-logo-text-wrap">
+      <img class="nav-logo-wordmark" id="navLogoText" src="Resources_4/Text_Light.png" alt="Cookies Grandma">
     </div>
   </div>
   <ul class="nav-links">
@@ -880,7 +919,7 @@ body::before {
     <div class="hero-eyebrow">Since 2019 · Handcrafted with Love</div>
     <h1 class="hero-title">
       Grandma's<br>
-      <em>Secret Recipe,</em><br>
+      <em>Secret Recipe,</em>
       Perfected.
     </h1>
     <p class="hero-subtitle">Premium Indonesian artisan cookies made from scratch — no shortcuts, no preservatives, only the finest ingredients passed down through generations.</p>
@@ -913,11 +952,8 @@ body::before {
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-img-grid">
-      <img src="Resources/IMG_3962.JPG" alt="Premium Nastar">
-      <img src="Resources/IMG_3980.jpeg" alt="Premium Kastangel">
-      <img src="Resources/IMG_3966.jpeg" alt="Nastar closeup">
-      <img src="Resources/IMG_3983.jpeg" alt="Kastangel closeup">
+    <div class="hero-img-grid single-photo">
+      <img src="Resources_3/1st_photo.jpeg" alt="Cookies Grandma premium cookie jars">
     </div>
   </div>
 </section>
@@ -947,14 +983,9 @@ body::before {
 <!-- ═══════════════════════════════ STORY -->
 <section class="section story" id="story">
   <div class="container">
-    <div class="story-inner">
+      <div class="story-inner">
       <div class="story-imgs reveal">
-        <img class="story-img-main" src="Resources/IMG_3964.jpeg" alt="Nastar in jar">
-        <img class="story-img-accent" src="Resources/IMG_3984.jpeg" alt="Kastangel">
-        <div class="story-badge">
-          <span class="story-badge-num">5+</span>
-          <span class="story-badge-txt">Years of<br>Love</span>
-        </div>
+        <video class="story-video" id="storyVideo" src="Resources_2/Video_1.mp4" muted playsinline preload="metadata" aria-label="Cookies Grandma story video"></video>
       </div>
       <div class="story-content">
         <div class="section-label reveal">Our Story</div>
@@ -1014,14 +1045,14 @@ body::before {
       <!-- NASTAR -->
       <div class="product-card reveal">
         <div class="product-card-media" id="nastarMedia">
-          <img src="Resources/IMG_3962.JPG" alt="Premium Nastar" id="nastarMainImg">
+          <img src="Resources_3/Nastar.jpeg" alt="Premium Nastar" id="nastarMainImg">
           <span class="product-card-badge">Bestseller</span>
           <div class="product-thumb-strip">
-            <img class="product-thumb active" src="Resources/IMG_3961.jpeg" onclick="switchImg('nastar',this,'Resources/IMG_3961.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3962.JPG" onclick="switchImg('nastar',this,'Resources/IMG_3962.JPG')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3963.jpeg" onclick="switchImg('nastar',this,'Resources/IMG_3963.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3964.jpeg" onclick="switchImg('nastar',this,'Resources/IMG_3964.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3966.jpeg" onclick="switchImg('nastar',this,'Resources/IMG_3966.jpeg')" alt="">
+            <img class="product-thumb active" src="Resources_3/Nastar.jpeg" onclick="switchImg('nastar',this,'Resources_3/Nastar.jpeg')" alt="">
+            <img class="product-thumb" src="Resources_3/Nastar.jpeg" onclick="switchImg('nastar',this,'Resources_3/Nastar.jpeg')" alt="">
+            <img class="product-thumb" src="Resources_3/Nastar.jpeg" onclick="switchImg('nastar',this,'Resources_3/Nastar.jpeg')" alt="">
+            <img class="product-thumb" src="Resources_3/Nastar.jpeg" onclick="switchImg('nastar',this,'Resources_3/Nastar.jpeg')" alt="">
+            <img class="product-thumb" src="Resources_3/Nastar.jpeg" onclick="switchImg('nastar',this,'Resources_3/Nastar.jpeg')" alt="">
           </div>
         </div>
         <div class="product-card-body">
@@ -1037,14 +1068,14 @@ body::before {
           </div>
           <div class="product-price-row">
             <div>
-              <div class="product-price" id="nastarPrice">Rp 95.000</div>
+              <div class="product-price" id="nastarPrice">Rp 80.000</div>
               <div class="product-price-note">per jar (±500g)</div>
             </div>
             <div class="product-qty-add">
               <button class="qty-btn" onclick="changeQty('nastar',-1)">−</button>
               <span class="qty-num" id="nastarQty">1</span>
               <button class="qty-btn" onclick="changeQty('nastar',1)">+</button>
-              <button class="add-to-cart-btn" id="nastarAddBtn" onclick="addToCart('nastar','Premium Nastar','Rp 95.000',95000,'Resources/IMG_3961.jpeg')">
+              <button class="add-to-cart-btn" id="nastarAddBtn" onclick="addToCart('nastar','Premium Nastar','Rp 80.000',80000,'Resources_3/Nastar.jpeg')">
                 Add
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
               </button>
@@ -1056,14 +1087,14 @@ body::before {
       <!-- KASTANGEL -->
       <div class="product-card reveal reveal-delay-1">
         <div class="product-card-media" id="kastangelMedia">
-          <img src="Resources/IMG_3980.jpeg" alt="Premium Kastangel" id="kastangelMainImg">
+          <img src="Resources_3/Kastengel.jpg" alt="Premium Kastangel" id="kastangelMainImg">
           <span class="product-card-badge" style="background:var(--gold);color:var(--brown);">Fan Favourite</span>
           <div class="product-thumb-strip">
-            <img class="product-thumb active" src="Resources/IMG_3970.jpeg" onclick="switchImg('kastangel',this,'Resources/IMG_3970.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3971.jpeg" onclick="switchImg('kastangel',this,'Resources/IMG_3971.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3975.jpeg" onclick="switchImg('kastangel',this,'Resources/IMG_3975.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3980.jpeg" onclick="switchImg('kastangel',this,'Resources/IMG_3980.jpeg')" alt="">
-            <img class="product-thumb" src="Resources/IMG_3983.jpeg" onclick="switchImg('kastangel',this,'Resources/IMG_3983.jpeg')" alt="">
+            <img class="product-thumb active" src="Resources_3/Kastengel.jpg" onclick="switchImg('kastangel',this,'Resources_3/Kastengel.jpg')" alt="">
+            <img class="product-thumb" src="Resources_3/Kastengel.jpg" onclick="switchImg('kastangel',this,'Resources_3/Kastengel.jpg')" alt="">
+            <img class="product-thumb" src="Resources_3/Kastengel.jpg" onclick="switchImg('kastangel',this,'Resources_3/Kastengel.jpg')" alt="">
+            <img class="product-thumb" src="Resources_3/Kastengel.jpg" onclick="switchImg('kastangel',this,'Resources_3/Kastengel.jpg')" alt="">
+            <img class="product-thumb" src="Resources_3/Kastengel.jpg" onclick="switchImg('kastangel',this,'Resources_3/Kastengel.jpg')" alt="">
           </div>
         </div>
         <div class="product-card-body">
@@ -1079,14 +1110,14 @@ body::before {
           </div>
           <div class="product-price-row">
             <div>
-              <div class="product-price" id="kastangelPrice">Rp 95.000</div>
+              <div class="product-price" id="kastangelPrice">Rp 115.000</div>
               <div class="product-price-note">per jar (±500g)</div>
             </div>
             <div class="product-qty-add">
               <button class="qty-btn" onclick="changeQty('kastangel',-1)">−</button>
               <span class="qty-num" id="kastangelQty">1</span>
               <button class="qty-btn" onclick="changeQty('kastangel',1)">+</button>
-              <button class="add-to-cart-btn" id="kastangelAddBtn" onclick="addToCart('kastangel','Premium Kastangel','Rp 95.000',95000,'Resources/IMG_3970.jpeg')">
+              <button class="add-to-cart-btn" id="kastangelAddBtn" onclick="addToCart('kastangel','Premium Kastangel','Rp 115.000',115000,'Resources_3/Kastengel.jpg')">
                 Add
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
               </button>
@@ -1106,8 +1137,8 @@ body::before {
       </div>
       <div style="display:flex;align-items:center;gap:1.5rem;">
         <div>
-          <div style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold-lt);">Rp 180.000</div>
-          <div style="font-family:var(--font-ui);font-size:0.7rem;color:rgba(245,237,214,0.6);text-decoration:line-through;">Rp 190.000</div>
+          <div style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold-lt);">Rp 185.000</div>
+          <div style="font-family:var(--font-ui);font-size:0.7rem;color:rgba(245,237,214,0.6);text-decoration:line-through;">Rp 195.000</div>
         </div>
         <button class="btn-primary" onclick="addBundle()">Add Bundle</button>
       </div>
@@ -1123,31 +1154,36 @@ body::before {
   </div>
   <div class="gallery-track-wrap" style="margin-top:2.5rem">
     <div class="gallery-track" id="galleryTrack">
-      <div class="gallery-item"><img src="Resources/IMG_3961.jpeg" alt="Nastar"><div class="gallery-item-overlay"><span>Premium Nastar</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3962.JPG" alt="Nastar jar"><div class="gallery-item-overlay"><span>Golden & Buttery</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3963.jpeg" alt="Nastar"><div class="gallery-item-overlay"><span>Nastar Close-up</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3964.jpeg" alt="Nastar top"><div class="gallery-item-overlay"><span>Fresh from the Jar</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3965.jpeg" alt="Nastar"><div class="gallery-item-overlay"><span>Pineapple Filling</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3966.jpeg" alt="Nastar detail"><div class="gallery-item-overlay"><span>Artisan Detail</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3970.jpeg" alt="Kastangel"><div class="gallery-item-overlay"><span>Premium Kastangel</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3971.jpeg" alt="Kastangel jar"><div class="gallery-item-overlay"><span>Cheese Perfection</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3975.jpeg" alt="Kastangel"><div class="gallery-item-overlay"><span>Crispy & Crumbly</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3980.jpeg" alt="Kastangel hero"><div class="gallery-item-overlay"><span>Rich Cheese Blend</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3983.jpeg" alt="Kastangel top"><div class="gallery-item-overlay"><span>Overhead Beauty</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3987.jpeg" alt="Kastangel styling"><div class="gallery-item-overlay"><span>Styled to Perfection</span></div></div>
-      <!-- duplicate for seamless loop -->
-      <div class="gallery-item"><img src="Resources/IMG_3961.jpeg" alt="Nastar"><div class="gallery-item-overlay"><span>Premium Nastar</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3962.JPG" alt="Nastar jar"><div class="gallery-item-overlay"><span>Golden & Buttery</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3963.jpeg" alt="Nastar"><div class="gallery-item-overlay"><span>Nastar Close-up</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3964.jpeg" alt="Nastar top"><div class="gallery-item-overlay"><span>Fresh from the Jar</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3965.jpeg" alt="Nastar"><div class="gallery-item-overlay"><span>Pineapple Filling</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3966.jpeg" alt="Nastar detail"><div class="gallery-item-overlay"><span>Artisan Detail</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3970.jpeg" alt="Kastangel"><div class="gallery-item-overlay"><span>Premium Kastangel</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3971.jpeg" alt="Kastangel jar"><div class="gallery-item-overlay"><span>Cheese Perfection</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3975.jpeg" alt="Kastangel"><div class="gallery-item-overlay"><span>Crispy & Crumbly</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3980.jpeg" alt="Kastangel hero"><div class="gallery-item-overlay"><span>Rich Cheese Blend</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3983.jpeg" alt="Kastangel top"><div class="gallery-item-overlay"><span>Overhead Beauty</span></div></div>
-      <div class="gallery-item"><img src="Resources/IMG_3987.jpeg" alt="Kastangel styling"><div class="gallery-item-overlay"><span>Styled to Perfection</span></div></div>
+      <div class="gallery-item wide"><img src="Resources_gallery_web/01-1st_photo.jpg" loading="lazy" decoding="async" alt="Cookies Grandma jars"><div class="gallery-item-overlay"><span>Signature Pair</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/02-IMG_3961.jpg" loading="lazy" decoding="async" alt="Nastar jar"><div class="gallery-item-overlay"><span>Nastar Jar</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/03-Kastengel.jpg" loading="lazy" decoding="async" alt="Kastengel jar"><div class="gallery-item-overlay"><span>Premium Kastengel</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/04-IMG_3970.jpg" loading="lazy" decoding="async" alt="Kastengel"><div class="gallery-item-overlay"><span>Cheese Cookies</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/05-Nastar.jpg" loading="lazy" decoding="async" alt="Premium Nastar"><div class="gallery-item-overlay"><span>Premium Nastar</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/06-IMG_3962.jpg" loading="lazy" decoding="async" alt="Nastar package"><div class="gallery-item-overlay"><span>Freshly Packed</span></div></div>
+      <div class="gallery-item tall"><img src="Resources_gallery_web/07-IMG_3971.jpg" loading="lazy" decoding="async" alt="Kastengel close-up"><div class="gallery-item-overlay"><span>Cheese Detail</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/08-IMG_3963.jpg" loading="lazy" decoding="async" alt="Nastar close-up"><div class="gallery-item-overlay"><span>Golden Nastar</span></div></div>
+      <div class="gallery-item wide"><img src="Resources_gallery_web/09-IMG_3980.jpg" loading="lazy" decoding="async" alt="Kastengel styling"><div class="gallery-item-overlay"><span>Styled Serving</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/10-IMG_3964.jpg" loading="lazy" decoding="async" alt="Nastar top view"><div class="gallery-item-overlay"><span>Jar Top View</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/11-IMG_3972.jpg" loading="lazy" decoding="async" alt="Kastengel jar detail"><div class="gallery-item-overlay"><span>Jar Detail</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/12-IMG_3965.jpg" loading="lazy" decoding="async" alt="Pineapple filling"><div class="gallery-item-overlay"><span>Pineapple Filling</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/13-IMG_3973.jpg" loading="lazy" decoding="async" alt="Kastengel texture"><div class="gallery-item-overlay"><span>Crumbly Texture</span></div></div>
+      <div class="gallery-item tall"><img src="Resources_gallery_web/14-IMG_3966.jpg" loading="lazy" decoding="async" alt="Nastar detail"><div class="gallery-item-overlay"><span>Artisan Detail</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/15-IMG_3974.jpg" loading="lazy" decoding="async" alt="Kastengel ingredients"><div class="gallery-item-overlay"><span>Cheese Blend</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/16-IMG_3967.jpg" loading="lazy" decoding="async" alt="Nastar cookies"><div class="gallery-item-overlay"><span>Small Batch</span></div></div>
+      <div class="gallery-item wide"><img src="Resources_gallery_web/17-IMG_3975.jpg" loading="lazy" decoding="async" alt="Kastengel spread"><div class="gallery-item-overlay"><span>Crispy & Savoury</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/18-IMG_3968.jpg" loading="lazy" decoding="async" alt="Ingredients"><div class="gallery-item-overlay"><span>Natural Ingredients</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/19-IMG_3976.jpg" loading="lazy" decoding="async" alt="Kastengel serving"><div class="gallery-item-overlay"><span>Ready to Serve</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/20-IMG_3969.jpg" loading="lazy" decoding="async" alt="Cookie detail"><div class="gallery-item-overlay"><span>Baked Fresh</span></div></div>
+      <div class="gallery-item tall"><img src="Resources_gallery_web/21-IMG_3977.jpg" loading="lazy" decoding="async" alt="Kastengel detail"><div class="gallery-item-overlay"><span>Golden Finish</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/22-IMG_3978.jpg" loading="lazy" decoding="async" alt="Cookie jar"><div class="gallery-item-overlay"><span>Sealed Jar</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/23-IMG_3979.jpg" loading="lazy" decoding="async" alt="Kastengel jar"><div class="gallery-item-overlay"><span>Gift Ready</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/24-IMG_3981.jpg" loading="lazy" decoding="async" alt="Cookie close-up"><div class="gallery-item-overlay"><span>Close-up Bite</span></div></div>
+      <div class="gallery-item wide"><img src="Resources_gallery_web/25-IMG_3982.jpg" loading="lazy" decoding="async" alt="Cookie table scene"><div class="gallery-item-overlay"><span>Table Scene</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/26-IMG_3983.jpg" loading="lazy" decoding="async" alt="Kastengel top"><div class="gallery-item-overlay"><span>Overhead Beauty</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/27-IMG_3984.jpg" loading="lazy" decoding="async" alt="Kastengel package"><div class="gallery-item-overlay"><span>Premium Package</span></div></div>
+      <div class="gallery-item tall"><img src="Resources_gallery_web/28-IMG_3985.jpg" loading="lazy" decoding="async" alt="Cookie styling"><div class="gallery-item-overlay"><span>Styled Detail</span></div></div>
+      <div class="gallery-item"><img src="Resources_gallery_web/29-IMG_3986.jpg" loading="lazy" decoding="async" alt="Order cookies"><div class="gallery-item-overlay"><span>Fresh Order</span></div></div>
+      <div class="gallery-item wide"><img src="Resources_gallery_web/30-IMG_3987.jpg" loading="lazy" decoding="async" alt="Styled cookies"><div class="gallery-item-overlay"><span>Styled to Perfection</span></div></div>
     </div>
   </div>
 </section>
@@ -1169,28 +1205,28 @@ body::before {
         <h2 class="section-title reveal reveal-delay-1">Quality You Can<br><em>Taste & Trust</em></h2>
         <div class="why-features">
           <div class="why-feature reveal reveal-delay-1">
-            <div class="why-feature-icon">🧈</div>
+            <div class="why-feature-icon">BT</div>
             <div>
               <div class="why-feature-title">Premium Butter & Cheese</div>
               <div class="why-feature-desc">We use only high-grade butter and imported Edam cheese — the same quality ingredients professional bakeries source, now in your home jar.</div>
             </div>
           </div>
           <div class="why-feature reveal reveal-delay-2">
-            <div class="why-feature-icon">🚫</div>
+            <div class="why-feature-icon">NO</div>
             <div>
               <div class="why-feature-title">Zero Preservatives, Always</div>
               <div class="why-feature-desc">No artificial preservatives, no shortcuts. What you taste is purely real — just like a freshly baked batch from Grandma's kitchen.</div>
             </div>
           </div>
           <div class="why-feature reveal reveal-delay-3">
-            <div class="why-feature-icon">🫙</div>
+            <div class="why-feature-icon">SEAL</div>
             <div>
               <div class="why-feature-title">Hygienically Sealed & Packed</div>
               <div class="why-feature-desc">Each jar is carefully sealed to lock in freshness and crispness, ensuring your cookies arrive in perfect condition every time.</div>
             </div>
           </div>
           <div class="why-feature reveal">
-            <div class="why-feature-icon">🎁</div>
+            <div class="why-feature-icon">GIFT</div>
             <div>
               <div class="why-feature-title">Perfect for Gifting</div>
               <div class="why-feature-desc">Elegant jars make Cookies Grandma the ideal gift for Lebaran, Christmas, birthdays, and corporate hampers — always received with delight.</div>
@@ -1331,22 +1367,22 @@ body::before {
               <label>Nastar (jars)</label>
               <select id="fNastar">
                 <option value="0">0 jar</option>
-                <option value="1" selected>1 jar — Rp 95.000</option>
-                <option value="2">2 jars — Rp 190.000</option>
-                <option value="3">3 jars — Rp 285.000</option>
-                <option value="5">5 jars — Rp 475.000</option>
-                <option value="10">10 jars — Rp 950.000</option>
+                <option value="1" selected>1 jar — Rp 80.000</option>
+                <option value="2">2 jars — Rp 160.000</option>
+                <option value="3">3 jars — Rp 240.000</option>
+                <option value="5">5 jars — Rp 400.000</option>
+                <option value="10">10 jars — Rp 800.000</option>
               </select>
             </div>
             <div class="form-group">
               <label>Kastangel (jars)</label>
               <select id="fKastangel">
                 <option value="0">0 jar</option>
-                <option value="1" selected>1 jar — Rp 95.000</option>
-                <option value="2">2 jars — Rp 190.000</option>
-                <option value="3">3 jars — Rp 285.000</option>
-                <option value="5">5 jars — Rp 475.000</option>
-                <option value="10">10 jars — Rp 950.000</option>
+                <option value="1" selected>1 jar — Rp 115.000</option>
+                <option value="2">2 jars — Rp 230.000</option>
+                <option value="3">3 jars — Rp 345.000</option>
+                <option value="5">5 jars — Rp 575.000</option>
+                <option value="10">10 jars — Rp 1.150.000</option>
               </select>
             </div>
           </div>
@@ -1367,7 +1403,7 @@ body::before {
             <div id="summaryLines" style="font-family:var(--font-ui);font-size:0.85rem;color:var(--brown);line-height:1.8;"></div>
             <div style="border-top:1px solid var(--cream-dk);margin-top:0.5rem;padding-top:0.5rem;display:flex;justify-content:space-between;">
               <span style="font-family:var(--font-ui);font-size:0.78rem;font-weight:500;color:var(--text-soft);">Subtotal</span>
-              <span style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--crimson);" id="formTotal">Rp 190.000</span>
+              <span style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--crimson);" id="formTotal">Rp 195.000</span>
             </div>
           </div>
           <button type="submit" class="form-submit">
@@ -1463,9 +1499,30 @@ document.querySelectorAll('a, button, .product-thumb, .gallery-item').forEach(el
 });
 
 /* ──── NAVBAR SCROLL ──── */
-window.addEventListener('scroll', () => {
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
-});
+const navbar = document.getElementById('navbar');
+const navLogoMark = document.getElementById('navLogoMark');
+const navLogoText = document.getElementById('navLogoText');
+const navLogoAssets = {
+  light: { mark: 'Resources_4/Logo_Light.png', text: 'Resources_4/Text_Light.png' },
+  dark: { mark: 'Resources_4/Logo_Dark.png', text: 'Resources_4/Text_Dark.png' }
+};
+let currentNavLogoTheme = 'light';
+
+function setNavLogoTheme(theme) {
+  if (theme === currentNavLogoTheme || !navLogoMark || !navLogoText) return;
+  currentNavLogoTheme = theme;
+  navLogoMark.src = navLogoAssets[theme].mark;
+  navLogoText.src = navLogoAssets[theme].text;
+}
+
+function updateNavbar() {
+  const scrolled = window.scrollY > 40;
+  navbar.classList.toggle('scrolled', scrolled);
+  setNavLogoTheme(scrolled ? 'dark' : 'light');
+}
+
+window.addEventListener('scroll', updateNavbar, { passive: true });
+updateNavbar();
 
 /* ──── SCROLL REVEAL ──── */
 const reveals = document.querySelectorAll('.reveal');
@@ -1473,6 +1530,99 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, { threshold: 0.12 });
 reveals.forEach(el => observer.observe(el));
+
+/* ──── GALLERY MOTION ──── */
+const galleryWrap = document.querySelector('.gallery-track-wrap');
+let galleryHover = false;
+let galleryPointer = 0;
+let galleryVelocity = 0;
+
+function scrollGalleryBy(delta) {
+  if (!galleryWrap) return;
+  const max = galleryWrap.scrollWidth - galleryWrap.clientWidth;
+  if (max <= 0) return;
+  galleryWrap.scrollLeft += delta;
+  if (galleryWrap.scrollLeft >= max - 1) galleryWrap.scrollLeft = 0;
+  if (galleryWrap.scrollLeft <= 0 && delta < 0) galleryWrap.scrollLeft = max;
+}
+
+function animateGallery() {
+  if (galleryWrap) {
+    let targetVelocity = 0.45;
+    if (galleryHover) {
+      const deadZone = 0.14;
+      const intent = Math.abs(galleryPointer);
+      targetVelocity = intent > deadZone
+        ? Math.sign(galleryPointer) * Math.pow((intent - deadZone) / (1 - deadZone), 1.35) * 7
+        : 0;
+    }
+    galleryVelocity += (targetVelocity - galleryVelocity) * 0.18;
+    scrollGalleryBy(galleryVelocity);
+  }
+  requestAnimationFrame(animateGallery);
+}
+
+if (galleryWrap) {
+  const enterGallery = () => {
+    galleryHover = true;
+    galleryPointer = 0;
+    galleryVelocity = 0;
+  };
+  const moveGallery = e => {
+    const rect = galleryWrap.getBoundingClientRect();
+    galleryPointer = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  };
+  const leaveGallery = () => {
+    galleryHover = false;
+    galleryPointer = 0;
+  };
+  galleryWrap.addEventListener('mouseenter', enterGallery);
+  galleryWrap.addEventListener('pointerenter', enterGallery);
+  galleryWrap.addEventListener('mousemove', moveGallery);
+  galleryWrap.addEventListener('pointermove', moveGallery);
+  galleryWrap.addEventListener('mouseleave', leaveGallery);
+  galleryWrap.addEventListener('pointerleave', leaveGallery);
+  animateGallery();
+}
+
+/* ──── STORY VIDEO PLAYBACK ──── */
+const storyVideo = document.getElementById('storyVideo');
+let storyVideoVisible = false;
+let storyVideoDelay = null;
+
+function playStoryVideo(fromStart = false) {
+  if (!storyVideo || !storyVideoVisible) return;
+  clearTimeout(storyVideoDelay);
+  if (fromStart) {
+    storyVideo.pause();
+    storyVideo.currentTime = 0;
+    if (storyVideo.ended) storyVideo.load();
+  }
+  storyVideo.play().catch(() => {});
+}
+
+if (storyVideo) {
+  storyVideo.loop = false;
+  storyVideo.addEventListener('ended', () => {
+    if (!storyVideoVisible) return;
+    storyVideoDelay = setTimeout(() => playStoryVideo(true), 3000);
+  });
+
+  const storyVideoObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      storyVideoVisible = entry.isIntersecting;
+      clearTimeout(storyVideoDelay);
+      if (storyVideoVisible) {
+        playStoryVideo(true);
+      } else {
+        storyVideo.pause();
+        storyVideo.currentTime = 0;
+      }
+    });
+  }, { threshold: 0.2 });
+
+  storyVideoObserver.observe(storyVideo);
+}
 
 /* ──── PRODUCT IMAGE SWITCHER ──── */
 function switchImg(product, thumb, src) {
@@ -1547,8 +1697,8 @@ function addToCart(id, name, priceStr, price, img) {
 function addBundle() {
   const nEx = cart.find(i => i.id === 'nastar');
   const kEx = cart.find(i => i.id === 'kastangel');
-  if (nEx) nEx.qty += 1; else cart.push({ id:'nastar', name:'Premium Nastar', priceStr:'Rp 90.000', price:90000, img:'Resources/IMG_3961.jpeg', qty:1 });
-  if (kEx) kEx.qty += 1; else cart.push({ id:'kastangel', name:'Premium Kastangel', priceStr:'Rp 90.000', price:90000, img:'Resources/IMG_3970.jpeg', qty:1 });
+  if (nEx) nEx.qty += 1; else cart.push({ id:'nastar', name:'Premium Nastar', priceStr:'Rp 80.000', price:PRICE_NASTAR, img:'Resources_3/Nastar.jpeg', qty:1 });
+  if (kEx) kEx.qty += 1; else cart.push({ id:'kastangel', name:'Premium Kastangel', priceStr:'Rp 115.000', price:PRICE_KASTANGEL, img:'Resources_3/Kastengel.jpg', qty:1 });
   renderCart();
   openCart();
   showToast('🎁 Bundle Hemat added! Saving Rp 10.000');
@@ -1560,6 +1710,8 @@ function closeCart() { document.getElementById('cartDrawer').classList.remove('o
 
 /* ──── API CONFIG ──── */
 const API_BASE = '/api';
+const PRICE_NASTAR = 80000;
+const PRICE_KASTANGEL = 115000;
 
 /* ──── SUBMIT ORDER TO API ──── */
 async function submitOrder(e) {
@@ -1699,12 +1851,12 @@ function buildWASuccessLink(orderNum, total, phone, nastar, kastangel, gift) {
 function openWhatsAppFallback(name, phone, address, nastar, kastangel, gift, notes) {
   const giftMap = { yes:'Gift Wrap (+Rp 15.000)', hamper:'Hamper Box (+Rp 35.000)', gift_wrap:'Gift Wrap (+Rp 15.000)' };
   const gExtra  = gift === 'yes' ? 15000 : gift === 'hamper' ? 35000 : 0;
-  const total   = (nastar + kastangel) * 95000 + gExtra;
+  const total   = nastar * PRICE_NASTAR + kastangel * PRICE_KASTANGEL + gExtra;
   const lines   = [
     '🍪 *ORDER - Cookies Grandma*', '',
     `👤 Nama: ${name}`, `📱 WA: ${phone}`, `📍 Alamat: ${address}`, '',
-    nastar    > 0 ? `• Premium Nastar ×${nastar} = ${fmt(nastar * 95000)}` : null,
-    kastangel > 0 ? `• Premium Kastangel ×${kastangel} = ${fmt(kastangel * 95000)}` : null,
+    nastar    > 0 ? `• Premium Nastar ×${nastar} = ${fmt(nastar * PRICE_NASTAR)}` : null,
+    kastangel > 0 ? `• Premium Kastangel ×${kastangel} = ${fmt(kastangel * PRICE_KASTANGEL)}` : null,
     `🎁 Wrapping: ${giftMap[gift] || 'Tidak'}`,
     notes ? `📝 Catatan: ${notes}` : null,
     '', `💰 *Total: ${fmt(total)}*`, '',
@@ -1771,8 +1923,8 @@ function showOrderTracking(o, logs) {
         </div>
       </div>
       <div style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-soft);margin-bottom:0.75rem">Items Ordered</div>
-      ${o.nastar_qty    > 0 ? `<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cream-dk)"><span style="font-family:var(--font-ui);font-size:0.88rem">🍡 Premium Nastar ×${o.nastar_qty}</span><span style="font-weight:600">${fmt(o.nastar_qty*95000)}</span></div>` : ''}
-      ${o.kastangel_qty > 0 ? `<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cream-dk)"><span style="font-family:var(--font-ui);font-size:0.88rem">🧀 Premium Kastangel ×${o.kastangel_qty}</span><span style="font-weight:600">${fmt(o.kastangel_qty*95000)}</span></div>` : ''}
+      ${o.nastar_qty    > 0 ? `<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cream-dk)"><span style="font-family:var(--font-ui);font-size:0.88rem">🍡 Premium Nastar ×${o.nastar_qty}</span><span style="font-weight:600">${fmt(o.nastar_qty*PRICE_NASTAR)}</span></div>` : ''}
+      ${o.kastangel_qty > 0 ? `<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cream-dk)"><span style="font-family:var(--font-ui);font-size:0.88rem">🧀 Premium Kastangel ×${o.kastangel_qty}</span><span style="font-weight:600">${fmt(o.kastangel_qty*PRICE_KASTANGEL)}</span></div>` : ''}
       <div style="display:flex;justify-content:space-between;padding:0.75rem 0;font-weight:700">
         <span style="font-family:var(--font-ui)">Total</span>
         <span style="font-family:var(--font-display);font-size:1.2rem;color:var(--crimson)">${fmt(o.total_price)}</span>
@@ -1814,14 +1966,14 @@ function updateFormSummary() {
   const k = parseInt(document.getElementById('fKastangel').value);
   const g = document.getElementById('fGift').value;
   let lines = [];
-  if (n > 0) lines.push(`Premium Nastar ×${n} = ${fmt(n * 95000)}`);
-  if (k > 0) lines.push(`Premium Kastangel ×${k} = ${fmt(k * 95000)}`);
+  if (n > 0) lines.push(`Premium Nastar ×${n} = ${fmt(n * PRICE_NASTAR)}`);
+  if (k > 0) lines.push(`Premium Kastangel ×${k} = ${fmt(k * PRICE_KASTANGEL)}`);
   const gExtra = g === 'yes' ? 15000 : g === 'hamper' ? 35000 : 0;
   if (gExtra) lines.push(`Gift Wrapping = ${fmt(gExtra)}`);
   document.getElementById('summaryLines').innerHTML = lines.length
     ? lines.join('<br>')
     : '<span style="opacity:0.5">No items selected yet.</span>';
-  document.getElementById('formTotal').textContent = fmt((n + k) * 95000 + gExtra);
+  document.getElementById('formTotal').textContent = fmt(n * PRICE_NASTAR + k * PRICE_KASTANGEL + gExtra);
 }
 ['fNastar','fKastangel','fGift'].forEach(id =>
   document.getElementById(id).addEventListener('change', updateFormSummary)
@@ -1887,3 +2039,4 @@ loadProductPrices();
 </script>
 </body>
 </html>
+

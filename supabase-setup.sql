@@ -78,12 +78,12 @@ INSERT INTO products (slug, name, subtitle, description, price, stock, image) VA
 (
   'nastar', 'Premium Nastar', 'Pineapple Jam Cookies',
   'Buttery melt-in-your-mouth shortcrust pastry shells filled with our house-made sweet-tangy pineapple jam. No preservatives — just pure goodness in every bite.',
-  95000, 500, 'Resources/IMG_3962.JPG'
+  80000, 500, 'Resources_3/Nastar.jpeg'
 ),
 (
   'kastangel', 'Premium Kastangel', 'Cheese Finger Cookies',
   'Crispy, crumbly cheese cookies loaded with premium Edam and cheddar cheese. Baked to a delicate golden crisp. No preservatives — crafted fresh for every order.',
-  95000, 500, 'Resources/IMG_3970.jpeg'
+  115000, 500, 'Resources_3/Kastengel.jpg'
 )
 ON CONFLICT (slug) DO NOTHING;
 

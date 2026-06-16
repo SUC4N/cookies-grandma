@@ -31,8 +31,8 @@ async function sendOrderConfirmation(order) {
   if (!process.env.EMAIL_USER || !order.customer_email) return;
 
   const items = [];
-  if (order.nastar_qty    > 0) items.push(`Premium Nastar x${order.nastar_qty}     = ${fmt(order.nastar_qty * 95000)}`);
-  if (order.kastangel_qty > 0) items.push(`Premium Kastangel x${order.kastangel_qty} = ${fmt(order.kastangel_qty * 95000)}`);
+  if (order.nastar_qty    > 0) items.push(`Premium Nastar x${order.nastar_qty}     = ${fmt(order.nastar_qty * 80000)}`);
+  if (order.kastangel_qty > 0) items.push(`Premium Kastangel x${order.kastangel_qty} = ${fmt(order.kastangel_qty * 115000)}`);
 
   const transporter = getTransporter();
   await transporter.sendMail({
@@ -81,12 +81,12 @@ async function sendOrderConfirmation(order) {
         ${order.nastar_qty > 0 ? `
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8">
           <span style="color:#3D1F0D">Premium Nastar <span style="color:#8B1A1A">×${order.nastar_qty}</span></span>
-          <span style="font-weight:600;color:#3D1F0D">${fmt(order.nastar_qty * 95000)}</span>
+          <span style="font-weight:600;color:#3D1F0D">${fmt(order.nastar_qty * 80000)}</span>
         </div>` : ''}
         ${order.kastangel_qty > 0 ? `
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8">
           <span style="color:#3D1F0D">Premium Kastangel <span style="color:#8B1A1A">×${order.kastangel_qty}</span></span>
-          <span style="font-weight:600;color:#3D1F0D">${fmt(order.kastangel_qty * 95000)}</span>
+          <span style="font-weight:600;color:#3D1F0D">${fmt(order.kastangel_qty * 115000)}</span>
         </div>` : ''}
         ${order.gift_wrapping !== 'none' ? `
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8">

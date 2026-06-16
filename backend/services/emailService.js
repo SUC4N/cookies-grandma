@@ -51,8 +51,8 @@ async function sendOrderConfirmation(order) {
     <div style="border:1.5px solid #EAD9B8;border-radius:8px;overflow:hidden;margin-bottom:28px">
       <div style="background:#F5EDD6;padding:12px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#6B4423">Order Details</div>
       <div style="padding:20px">
-        ${order.nastar_qty > 0    ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8"><span>🍡 Premium Nastar ×${order.nastar_qty}</span><strong>${fmt(order.nastar_qty * 95000)}</strong></div>` : ''}
-        ${order.kastangel_qty > 0 ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8"><span>🧀 Premium Kastangel ×${order.kastangel_qty}</span><strong>${fmt(order.kastangel_qty * 95000)}</strong></div>` : ''}
+        ${order.nastar_qty > 0    ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8"><span>🍡 Premium Nastar ×${order.nastar_qty}</span><strong>${fmt(order.nastar_qty * 80000)}</strong></div>` : ''}
+        ${order.kastangel_qty > 0 ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8"><span>🧀 Premium Kastangel ×${order.kastangel_qty}</span><strong>${fmt(order.kastangel_qty * 115000)}</strong></div>` : ''}
         ${order.gift_wrapping !== 'none' ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EAD9B8"><span>🎁 ${giftLabel(order.gift_wrapping)}</span><span>${fmt(order.gift_wrapping === 'gift_wrap' ? 15000 : 35000)}</span></div>` : ''}
         <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-size:18px;font-weight:700">
           <span>Total</span><span style="color:#8B1A1A">${fmt(order.total_price)}</span>

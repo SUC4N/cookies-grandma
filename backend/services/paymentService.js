@@ -16,9 +16,9 @@ async function createMidtransPayment(order) {
   const items = [];
 
   if (order.nastar_qty > 0)
-    items.push({ id:'NASTAR',    name:'Premium Nastar',    price:95000, quantity:order.nastar_qty,    category:'Cookies' });
+    items.push({ id:'NASTAR',    name:'Premium Nastar',    price:80000, quantity:order.nastar_qty,    category:'Cookies' });
   if (order.kastangel_qty > 0)
-    items.push({ id:'KASTANGEL', name:'Premium Kastangel', price:95000, quantity:order.kastangel_qty, category:'Cookies' });
+    items.push({ id:'KASTANGEL', name:'Premium Kastangel', price:115000, quantity:order.kastangel_qty, category:'Cookies' });
   if (order.gift_wrapping === 'gift_wrap')
     items.push({ id:'GIFTWRAP', name:'Gift Wrapping', price:15000, quantity:1 });
   if (order.gift_wrapping === 'hamper')

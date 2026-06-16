@@ -128,13 +128,13 @@ async function setup() {
       {
         slug: 'nastar', name: 'Premium Nastar', subtitle: 'Pineapple Jam Cookies',
         description: 'Buttery melt-in-your-mouth shortcrust pastry shells filled with our house-made sweet-tangy pineapple jam. Each golden ball is rolled to perfection and dusted with fine cheese for a signature finish. No preservatives — just pure goodness in every bite.',
-        price: parseInt(process.env.PRICE_NASTAR || 95000), stock: 500,
+        price: parseInt(process.env.PRICE_NASTAR || 80000), stock: 500,
         image: '/images/IMG_3962.JPG',
       },
       {
         slug: 'kastangel', name: 'Premium Kastangel', subtitle: 'Cheese Finger Cookies',
         description: 'Crispy, crumbly cheese cookies generously loaded with premium Edam and cheddar cheese. Baked to a delicate golden crisp, each finger dissolves into a rich, savoury-sweet flavour. No preservatives — crafted fresh for every order.',
-        price: parseInt(process.env.PRICE_KASTANGEL || 95000), stock: 500,
+        price: parseInt(process.env.PRICE_KASTANGEL || 115000), stock: 500,
         image: '/images/IMG_3970.jpeg',
       }
     ];

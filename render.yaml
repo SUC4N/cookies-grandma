@@ -36,9 +36,9 @@ services:
       - key: WA_NUMBER
         value: "6281234567890"      # ⚠️ Update to your real WA number
       - key: PRICE_NASTAR
-        value: "95000"
+        value: "80000"
       - key: PRICE_KASTANGEL
-        value: "95000"
+        value: "115000"
       - key: PRICE_GIFT_WRAP
         value: "15000"
       - key: PRICE_HAMPER_BOX

@@ -18,7 +18,7 @@ async function calcTotal(n, k, giftWrap) {
     getSetting('price_gift_wrap'), getSetting('price_hamper_box'), getSetting('shipping_cost_default')
   ]);
   const giftCost = giftWrap==='gift_wrap' ? parseInt(gw||15000) : giftWrap==='hamper' ? parseInt(hb||35000) : 0;
-  const subtotal = n*parseInt(process.env.PRICE_NASTAR||95000) + k*parseInt(process.env.PRICE_KASTANGEL||95000) + giftCost;
+  const subtotal = n*parseInt(process.env.PRICE_NASTAR||80000) + k*parseInt(process.env.PRICE_KASTANGEL||115000) + giftCost;
   const shipping = parseInt(sh||0);
   return { subtotal, shipping, total: subtotal+shipping };
 }
